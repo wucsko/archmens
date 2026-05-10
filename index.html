@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archmens — The Private Operating System for Ambitious People</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --border: #222222;
+    --text: #f0f0f0;
+    --text2: #888888;
+    --text3: #555555;
+    --purple: #7C6FE0;
+    --purple-light: #2a2540;
+    --green: #1D9E75;
+    --radius: 12px;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .container { max-width: 700px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV */
+  nav { border-bottom: 0.5px solid var(--border); padding: 20px 0; position: sticky; top: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 100; }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: 0.04em; }
+  .logo span { color: var(--purple); }
+  .nav-cta { background: var(--purple); color: white; border: none; padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero { padding: 80px 0 60px; border-bottom: 0.5px solid var(--border); }
+  .badge { display: inline-flex; align-items: center; gap: 7px; background: var(--bg2); border: 0.5px solid var(--border); color: var(--text2); font-size: 11px; font-weight: 500; padding: 5px 14px; border-radius: 20px; margin-bottom: 32px; letter-spacing: 0.05em; }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); }
+  h1 { font-size: 42px; font-weight: 500; line-height: 1.15; margin-bottom: 24px; }
+  h1 em { font-style: normal; color: var(--purple); }
+  .hero-sub { font-size: 17px; color: var(--text2); line-height: 1.75; max-width: 520px; margin-bottom: 40px; }
+  .waitlist-row { display: flex; gap: 10px; max-width: 460px; margin-bottom: 12px; }
+  .waitlist-row input { flex: 1; height: 46px; padding: 0 16px; font-size: 14px; font-family: inherit; border: 0.5px solid var(--border); border-radius: 9px; background: var(--bg2); color: var(--text); outline: none; transition: border-color 0.15s; }
+  .waitlist-row input:focus { border-color: var(--purple); }
+  .waitlist-row input::placeholder { color: var(--text3); }
+  .join-btn { height: 46px; padding: 0 24px; background: var(--purple); color: white; border: none; border-radius: 9px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; white-space: nowrap; transition: opacity 0.15s; }
+  .join-btn:hover { opacity: 0.9; }
+  .form-note { font-size: 12px; color: var(--text3); }
+  .success-msg { display: none; font-size: 13px; color: var(--green); font-weight: 500; margin-top: 8px; }
+  .stats { display: flex; gap: 40px; margin-top: 48px; }
+  .stat-num { font-size: 24px; font-weight: 500; color: var(--text); }
+  .stat-label { font-size: 12px; color: var(--text3); margin-top: 3px; }
+
+  /* SECTIONS */
+  section { padding: 60px 0; border-bottom: 0.5px solid var(--border); }
+  .eyebrow { font-size: 11px; font-weight: 500; color: var(--purple); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  h2 { font-size: 26px; font-weight: 500; line-height: 1.25; margin-bottom: 12px; }
+  .section-sub { font-size: 15px; color: var(--text2); line-height: 1.75; margin-bottom: 32px; max-width: 500px; }
+
+  /* CORE LOOP */
+  .loop { display: flex; flex-direction: column; }
+  .loop-step { display: flex; gap: 18px; align-items: flex-start; padding: 20px 0; border-bottom: 0.5px solid var(--border); }
+  .loop-step:last-child { border-bottom: none; }
+  .loop-num { width: 30px; height: 30px; border-radius: 50%; background: var(--purple-light); color: var(--purple); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .loop-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 5px; }
+  .loop-body { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+  /* AI PREVIEW */
+  .ai-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .ai-header { padding: 14px 18px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .ai-av { width: 30px; height: 30px; border-radius: 50%; background: var(--purple-light); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--purple); }
+  .ai-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .ai-status { font-size: 11px; color: var(--green); }
+  .ai-chat { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .ai-msg { max-width: 85%; padding: 11px 15px; border-radius: 14px; font-size: 13px; line-height: 1.65; }
+  .ai-msg.mentor { background: var(--bg3); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .ai-msg.user { background: var(--purple-light); color: #c5beff; align-self: flex-end; border-bottom-right-radius: 4px; }
+
+  /* RANKS */
+  .ranks { display: flex; flex-direction: column; gap: 8px; }
+  .rank-row { display: flex; align-items: center; gap: 14px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 18px; }
+  .rank-badge { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .rank-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .rank-desc { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .rank-unlock { font-size: 11px; color: var(--text3); margin-left: auto; white-space: nowrap; }
+
+  /* FEED */
+  .feed { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .feed-top { padding: 13px 18px; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .feed-top span { font-size: 13px; font-weight: 500; color: var(--text); }
+  .live { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--green); }
+  .live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); display: inline-block; }
+  .post { padding: 16px 18px; border-bottom: 0.5px solid var(--border); }
+  .post:last-child { border-bottom: none; }
+  .post-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .p-av { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  .p-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .p-loc { font-size: 11px; color: var(--text3); font-weight: 400; }
+  .p-tag { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-left: auto; }
+  .p-body { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 12px; }
+  .p-actions { display: flex; gap: 18px; }
+  .p-act { font-size: 12px; color: var(--text3); display: flex; align-items: center; gap: 5px; cursor: pointer; transition: color 0.15s; }
+  .p-act:hover { color: var(--purple); }
+
+  /* GROUPS */
+  .group-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .group-header { padding: 14px 18px; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .group-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .members-section { padding: 16px 18px; border-bottom: 0.5px solid var(--border); }
+  .members-label { font-size: 10px; color: var(--text3); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+  .member-list { display: flex; flex-direction: column; gap: 12px; }
+  .member-row { display: flex; align-items: center; gap: 12px; }
+  .m-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  .m-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .m-goal { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .m-streak { font-size: 11px; color: var(--purple); font-weight: 500; margin-left: auto; }
+  .m-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .checkin-section { padding: 16px 18px; }
+  .checkin-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+  .checkin { display: flex; gap: 10px; }
+  .ci-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; flex-shrink: 0; }
+  .ci-bubble { background: var(--bg3); border-radius: 10px; border-top-left-radius: 3px; padding: 9px 13px; flex: 1; }
+  .ci-name { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 3px; }
+  .ci-text { font-size: 12px; color: var(--text); line-height: 1.55; }
+  .ci-time { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+  /* APPLY FORM */
+  .apply-form { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 28px; }
+  .form-title { font-size: 18px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+  .form-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; line-height: 1.65; }
+  .form-row { margin-bottom: 16px; }
+  .form-label { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 7px; display: block; }
+  .form-input { width: 100%; font-family: inherit; font-size: 14px; color: var(--text); background: var(--bg3); border: 0.5px solid var(--border); border-radius: 9px; padding: 11px 14px; outline: none; transition: border-color 0.15s; }
+  .form-input:focus { border-color: var(--purple); }
+  .form-input::placeholder { color: var(--text3); }
+  textarea.form-input { resize: none; height: 90px; line-height: 1.6; }
+  .pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 7px; }
+  .pill { padding: 6px 14px; border-radius: 20px; font-size: 12px; border: 0.5px solid var(--border); background: var(--bg3); color: var(--text2); cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .pill.selected { background: var(--purple-light); color: #c5beff; border-color: var(--purple); font-weight: 500; }
+  .submit-btn { width: 100%; height: 44px; background: var(--purple); color: white; border: none; border-radius: 9px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 8px; transition: opacity 0.15s; }
+  .submit-btn:hover { opacity: 0.9; }
+  .success-state { display: none; text-align: center; padding: 24px 0 8px; }
+  .success-state .icon { font-size: 32px; color: var(--green); margin-bottom: 10px; }
+  .success-state p { font-size: 14px; color: var(--text2); line-height: 1.7; }
+  .success-state strong { color: var(--text); }
+
+  /* CTA */
+  .cta-block { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 40px; text-align: center; margin: 60px 0; }
+  .cta-block h2 { margin-bottom: 12px; }
+  .cta-block p { font-size: 15px; color: var(--text2); margin-bottom: 28px; line-height: 1.7; }
+  .cta-row { display: flex; gap: 10px; max-width: 420px; margin: 0 auto; }
+  .cta-row input { flex: 1; height: 44px; padding: 0 14px; font-size: 14px; font-family: inherit; border: 0.5px solid var(--border); border-radius: 9px; background: var(--bg3); color: var(--text); outline: none; }
+  .cta-row input:focus { border-color: var(--purple); }
+  .cta-row input::placeholder { color: var(--text3); }
+  .cta-btn { height: 44px; padding: 0 22px; background: var(--purple); color: white; border: none; border-radius: 9px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .cta-success { display: none; font-size: 13px; color: var(--green); font-weight: 500; margin-top: 12px; }
+
+  /* FOOTER */
+  footer { border-top: 0.5px solid var(--border); padding: 32px 0; display: flex; justify-content: space-between; align-items: center; }
+  .footer-logo { font-size: 14px; font-weight: 600; color: var(--text2); }
+  .footer-logo span { color: var(--purple); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { font-size: 12px; color: var(--text3); text-decoration: none; }
+  .footer-links a:hover { color: var(--text2); }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 30px; }
+    .waitlist-row { flex-direction: column; }
+    .stats { gap: 24px; }
+    .cta-row { flex-direction: column; }
+    .footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="logo">Arch<span>mens</span></div>
+    <button class="nav-cta" onclick="document.getElementById('heroEmail').focus()">Request access</button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <div class="badge"><span class="badge-dot"></span> Private access · Application only</div>
+    <h1>This is not an app.<br>This is your <em>operating<br>system</em> for life.</h1>
+    <p class="hero-sub">Built for ambitious people who are done with distraction, weak environments, and going it alone. Surround yourself with serious minds. Be held accountable. Build something real.</p>
+    <div class="waitlist-row">
+      <input type="email" id="heroEmail" placeholder="Your email address" />
+      <button class="join-btn" onclick="joinHero()">Request access</button>
+    </div>
+    <div class="success-msg" id="heroSuccess">You're on the list. We review applications weekly.</div>
+    <div class="form-note">No spam. No noise. We only let in serious people.</div>
+    <div class="stats">
+      <div>
+        <div class="stat-num" id="memberCount">0</div>
+        <div class="stat-label">Members worldwide</div>
+      </div>
+      <div>
+        <div class="stat-num">47</div>
+        <div class="stat-label">Countries</div>
+      </div>
+      <div>
+        <div class="stat-num">89%</div>
+        <div class="stat-label">Still active after 90 days</div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="eyebrow">The core loop</div>
+    <h2>One system. Built for obsession.</h2>
+    <p class="section-sub">Version 1 does one thing better than anyone else.</p>
+    <div class="loop">
+      <div class="loop-step">
+        <div class="loop-num">1</div>
+        <div>
+          <div class="loop-title">Set your goals publicly</div>
+          <div class="loop-body">Your goals are visible to your group. No hiding. No vague intentions. Real commitments with real people watching.</div>
+        </div>
+      </div>
+      <div class="loop-step">
+        <div class="loop-num">2</div>
+        <div>
+          <div class="loop-title">Your AI mentor challenges you daily</div>
+          <div class="loop-body">Not a chatbot. A mentor with memory and philosophy. It remembers what you said last week and holds you to it.</div>
+        </div>
+      </div>
+      <div class="loop-step">
+        <div class="loop-num">3</div>
+        <div>
+          <div class="loop-title">Your group holds you accountable</div>
+          <div class="loop-body">Five to ten people. Same hunger. Daily check-ins. The social pressure of people who actually care whether you show up.</div>
+        </div>
+      </div>
+      <div class="loop-step">
+        <div class="loop-num">4</div>
+        <div>
+          <div class="loop-title">Post your proof. Earn your rank.</div>
+          <div class="loop-body">Wins, streaks, progress. The community sees your growth. You become known for your consistency.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">The AI mentor</div>
+    <h2>Not ChatGPT. Something different.</h2>
+    <p class="section-sub">Your mentor has memory, philosophy, and emotional depth. It knows your history — and it uses it.</p>
+    <div class="ai-card">
+      <div class="ai-header">
+        <div class="ai-av">A</div>
+        <div>
+          <div class="ai-name">Your Archmens mentor</div>
+          <div class="ai-status">Active · remembers everything</div>
+        </div>
+      </div>
+      <div class="ai-chat">
+        <div class="ai-msg mentor">Three weeks ago you told me you wanted discipline. Today you skipped your morning routine for the fourth time. What story are you telling yourself that makes that acceptable?</div>
+        <div class="ai-msg user">I've just been tired. Work has been a lot.</div>
+        <div class="ai-msg mentor">Tired is real. But tired has been your answer for 21 days. The question isn't whether you're tired — it's whether you've decided that tired gets to win. Have you?</div>
+        <div class="ai-msg user">No. I haven't decided that.</div>
+        <div class="ai-msg mentor">Good. Then tomorrow we don't negotiate with tired. What time are you committing to right now?</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Mastermind groups</div>
+    <h2>Serious people have always moved in groups.</h2>
+    <p class="section-sub">The greatest minds in history didn't build alone. They surrounded themselves with people who pushed them further than they could go alone. That's what this is.</p>
+    <div class="group-card">
+      <div class="group-header">
+        <div class="group-title">The Builders — Group 7</div>
+        <span class="live">4 active now</span>
+      </div>
+      <div class="members-section">
+        <div class="members-label">Members</div>
+        <div class="member-list">
+          <div class="member-row">
+            <div class="m-av" style="background:#2a2540;color:#a89cf7;">JM</div>
+            <div>
+              <div class="m-name">James M. <span style="font-weight:400;font-size:11px;color:#555;">Adelaide, AU</span></div>
+              <div class="m-goal">Building a SaaS product for tradespeople</div>
+            </div>
+            <div class="m-streak">🔥 63</div>
+            <div class="m-dot" style="background:#1D9E75;"></div>
+          </div>
+          <div class="member-row">
+            <div class="m-av" style="background:#1a2e28;color:#4db896;">SK</div>
+            <div>
+              <div class="m-name">Sarah K. <span style="font-weight:400;font-size:11px;color:#555;">London, UK</span></div>
+              <div class="m-goal">Launching an online course business</div>
+            </div>
+            <div class="m-streak">🔥 41</div>
+            <div class="m-dot" style="background:#1D9E75;"></div>
+          </div>
+          <div class="member-row">
+            <div class="m-av" style="background:#2e1e18;color:#e07050;">RO</div>
+            <div>
+              <div class="m-name">Rico O. <span style="font-weight:400;font-size:11px;color:#555;">Lagos, NG</span></div>
+              <div class="m-goal">Scaling a digital marketing agency</div>
+            </div>
+            <div class="m-streak">🔥 29</div>
+            <div class="m-dot" style="background:#1D9E75;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="checkin-section">
+        <div class="members-label">Today's check-ins</div>
+        <div class="checkin-list">
+          <div class="checkin">
+            <div class="ci-av" style="background:#2a2540;color:#a89cf7;">JM</div>
+            <div class="ci-bubble">
+              <div class="ci-name">James M.</div>
+              <div class="ci-text">Sent 8 cold outreach messages. Two replied. One booked a call Thursday. Momentum is real.</div>
+              <div class="ci-time">42 min ago</div>
+            </div>
+          </div>
+          <div class="checkin">
+            <div class="ci-av" style="background:#1a2e28;color:#4db896;">SK</div>
+            <div class="ci-bubble">
+              <div class="ci-name">Sarah K.</div>
+              <div class="ci-text">Mentor told me to stop perfecting and start publishing. Going live tonight whether it's ready or not.</div>
+              <div class="ci-time">1 hr ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Ranks & identity</div>
+    <h2>You earn your place here.</h2>
+    <p class="section-sub">Status is built through consistency, not payment.</p>
+    <div class="ranks">
+      <div class="rank-row">
+        <div class="rank-badge" style="background:#1e1e1e;color:#666;">I</div>
+        <div><div class="rank-name">Initiate</div><div class="rank-desc">You've committed. The journey starts here.</div></div>
+        <div class="rank-unlock">Day 1</div>
+      </div>
+      <div class="rank-row">
+        <div class="rank-badge" style="background:#1a2535;color:#5b9bd5;">D</div>
+        <div><div class="rank-name">Disciplined</div><div class="rank-desc">30-day streak. You do what you say.</div></div>
+        <div class="rank-unlock">30 days</div>
+      </div>
+      <div class="rank-row">
+        <div class="rank-badge" style="background:#1a2e1a;color:#4db86a;">B</div>
+        <div><div class="rank-name">Builder</div><div class="rank-desc">Active project. Real progress visible.</div></div>
+        <div class="rank-unlock">Milestone hit</div>
+      </div>
+      <div class="rank-row">
+        <div class="rank-badge" style="background:#2a2540;color:#a89cf7;">L</div>
+        <div><div class="rank-name">Leader</div><div class="rank-desc">You've helped others rise. The community knows your name.</div></div>
+        <div class="rank-unlock">Community impact</div>
+      </div>
+      <div class="rank-row" style="border-color:#7C6FE0;">
+        <div class="rank-badge" style="background:#7C6FE0;color:white;">M</div>
+        <div><div class="rank-name">Archmens Elite</div><div class="rank-desc">The top 1%. You don't just build your life — you elevate everyone around you.</div></div>
+        <div class="rank-unlock">Invitation only</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Apply to join a group</div>
+    <h2>Find your people.</h2>
+    <p class="section-sub">Tell us who you are and what you're building. We match you within 72 hours.</p>
+    <div class="apply-form">
+      <div id="formBody">
+        <div class="form-row">
+          <label class="form-label">Your name</label>
+          <input class="form-input" type="text" id="f-name" placeholder="First name" />
+        </div>
+        <div class="form-row">
+          <label class="form-label">Your single biggest goal right now</label>
+          <input class="form-input" type="text" id="f-goal" placeholder="Be specific. Not 'be successful' — what exactly?" />
+        </div>
+        <div class="form-row">
+          <label class="form-label">What are you focused on?</label>
+          <div class="pills">
+            <button class="pill" onclick="togglePill(this)">Entrepreneurship</button>
+            <button class="pill" onclick="togglePill(this)">Financial freedom</button>
+            <button class="pill" onclick="togglePill(this)">Fitness & discipline</button>
+            <button class="pill" onclick="togglePill(this)">Content & brand</button>
+            <button class="pill" onclick="togglePill(this)">Career pivot</button>
+            <button class="pill" onclick="togglePill(this)">Mindset & philosophy</button>
+            <button class="pill" onclick="togglePill(this)">Investing & wealth</button>
+            <button class="pill" onclick="togglePill(this)">Creative work</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Why do you need a group? Be honest.</label>
+          <textarea class="form-input" id="f-why" placeholder="What's been missing? What have you tried alone that hasn't worked?"></textarea>
+        </div>
+        <button class="submit-btn" onclick="submitForm()">Apply to join a group</button>
+      </div>
+      <div class="success-state" id="successState">
+        <div class="icon">✓</div>
+        <p><strong>Application received.</strong><br>We review every application personally. You'll hear back within 72 hours with your group match.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-block">
+    <h2>Ready to be around serious people?</h2>
+    <p>We only let in people who are genuinely committed.<br>No tourists. No lurkers. Only builders.</p>
+    <div class="cta-row">
+      <input type="email" id="ctaEmail" placeholder="Your email address" />
+      <button class="cta-btn" onclick="joinCta()">Request access</button>
+    </div>
+    <div class="cta-success" id="ctaSuccess">Application received. We'll be in touch.</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+    <div class="footer-logo">Arch<span>mens</span></div>
+    <div class="footer-links">
+      <a href="#">Manifesto</a>
+      <a href="#">Privacy</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Animate member count
+  let count = 0;
+  const target = 1247;
+  const el = document.getElementById('memberCount');
+  const step = Math.ceil(target / 60);
+  const interval = setInterval(() => {
+    count = Math.min(count + step, target);
+    el.textContent = count.toLocaleString();
+    if (count >= target) clearInterval(interval);
+  }, 25);
+
+  function joinHero() {
+    const email = document.getElementById('heroEmail').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('heroEmail').style.borderColor = '#E24B4A';
+      return;
+    }
+    document.getElementById('heroEmail').style.borderColor = '#1D9E75';
+    document.getElementById('heroSuccess').style.display = 'block';
+    document.querySelector('.join-btn').textContent = 'Application sent ✓';
+    document.querySelector('.join-btn').style.background = '#1D9E75';
+  }
+
+  function joinCta() {
+    const email = document.getElementById('ctaEmail').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('ctaEmail').style.borderColor = '#E24B4A';
+      return;
+    }
+    document.getElementById('ctaEmail').style.borderColor = '#1D9E75';
+    document.getElementById('ctaSuccess').style.display = 'block';
+    document.querySelector('.cta-btn').textContent = 'Sent ✓';
+    document.querySelector('.cta-btn').style.background = '#1D9E75';
+  }
+
+  function togglePill(el) {
+    el.classList.toggle('selected');
+  }
+
+  function submitForm() {
+    const name = document.getElementById('f-name').value.trim();
+    const goal = document.getElementById('f-goal').value.trim();
+    const why = document.getElementById('f-why').value.trim();
+    if (!name) { document.getElementById('f-name').style.borderColor = '#E24B4A'; return; }
+    if (!goal) { document.getElementById('f-goal').style.borderColor = '#E24B4A'; return; }
+    if (!why) { document.getElementById('f-why').style.borderColor = '#E24B4A'; return; }
+    document.getElementById('formBody').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+  }
+</script>
+</body>
+</html>
